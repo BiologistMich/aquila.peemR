@@ -20,30 +20,30 @@ calc.abun <- function(PC_lista) {
     # 1. Datos de abundancia por especie y cálculo del IAR
     # ------------------------------------------------------------------
     abun <- df %>%
-      tidyverse:: select(Especie, Individuos) %>%
-      tidyverse:: filter(Especie != "Z sin registro") %>%
-      tidyverse:: group_by(Especie) %>%
-      tidyverse:: summarise(Abundancias = sum(Individuos, na.rm = TRUE), .groups = "drop") %>%
-      tidyverse:: mutate(IAR = Abundancias / sum(Abundancias) * 100) %>%
-      tidyverse:: mutate(IAR = round(IAR,2)) %>%
-      tidyverse:: arrange(tidyverse::desc(Abundancias)) %>%
+      dplyr:: select(Especie, Individuos) %>%
+      dplyr:: filter(Especie != "Z sin registro") %>%
+      dplyr:: group_by(Especie) %>%
+      dplyr:: summarise(Abundancias = sum(Individuos, na.rm = TRUE), .groups = "drop") %>%
+      dplyr:: mutate(IAR = Abundancias / sum(Abundancias) * 100) %>%
+      dplyr:: mutate(IAR = round(IAR,2)) %>%
+      dplyr:: arrange(dplyr::desc(Abundancias)) %>%
       janitor:: adorn_totals(where = "row")
 
     # ------------------------------------------------------------------
     # 2. Datos de abundancia por actividad (Cortejo, Forrajeo, Percha, Vocalización, Vuelo)
     # ------------------------------------------------------------------
     actividad <- df %>%
-      tidyverse::select(Especie, Cortejo, Forrajeo, Percha, Vocalizacion, Vuelo) %>%
-      tidyverse:: filter(Especie != "Z sin registro") %>%
+      dplyr::select(Especie, Cortejo, Forrajeo, Percha, Vocalizacion, Vuelo) %>%
+      dplyr:: filter(Especie != "Z sin registro") %>%
       tidyr::pivot_longer(
         cols = -Especie, # todas las columnas
         names_to = "Actividad",
         values_to = "Individuos"
       ) %>%
-      tidyverse::filter(Individuos > 0) %>%
-      tidyverse::group_by(Actividad) %>%
-      tidyverse::summarise(Abundancias = sum(Individuos, na.rm = TRUE),
-            Especies = tidyverse:: n_distinct(Especie),
+      dplyr::filter(Individuos > 0) %>%
+      dplyr::group_by(Actividad) %>%
+      dplyr::summarise(Abundancias = sum(Individuos, na.rm = TRUE),
+            Especies = dplyr::n_distinct(Especie),
             .groups = "drop"
           ) %>%
       janitor::adorn_totals(where = "row")
@@ -52,17 +52,17 @@ calc.abun <- function(PC_lista) {
     # 3. Datos de abundancia por estratos
     # ------------------------------------------------------------------
     estratos <- df %>%
-      tidyverse::select(Especie, Arboreo, Arbustivo, Herbaceo, Suelo, Agua, Estructura, Aereo) %>%
-      tidyverse:: filter(Especie != "Z sin registro") %>%
+      dplyr::select(Especie, Arboreo, Arbustivo, Herbaceo, Suelo, Agua, Estructura, Aereo) %>%
+      dplyr:: filter(Especie != "Z sin registro") %>%
       tidyr::pivot_longer(
         cols = c(Arboreo, Arbustivo, Herbaceo, Suelo, Agua, Estructura, Aereo),
         names_to = "Estrato",
         values_to = "Individuos"
       ) %>%
-      tidyverse::filter(Individuos > 0) %>%
-      tidyverse::group_by(Estrato) %>%
-      tidyverse::summarise(Abundancias = sum(Individuos, na.rm = TRUE), 
-                       Especies = tidyverse:: n_distinct(Especie),
+      dplyr::filter(Individuos > 0) %>%
+      dplyr::group_by(Estrato) %>%
+      dplyr::summarise(Abundancias = sum(Individuos, na.rm = TRUE), 
+                       Especies = dplyr:: n_distinct(Especie),
                        .groups = "drop") %>%
       janitor::adorn_totals(where = "row")
 
@@ -70,12 +70,12 @@ calc.abun <- function(PC_lista) {
     # 4. Cálculo de índices de diversidad
     # ------------------------------------------------------------------
     diversidad_data <- df %>%
-      tidyverse::select(Metodo, Codigo_metodo, Especie, Individuos) %>%
-      tidyverse:: filter(Especie != "Z sin registro") %>%
-      tidyverse::filter(Metodo != "INC") %>%
-      tidyverse::select(-Metodo) %>%
-      tidyverse::group_by(Codigo_metodo, Especie) %>%
-      tidyverse::summarise(Individuos = sum(Individuos, na.rm = TRUE), .groups = "drop") %>%
+      dplyr::select(Metodo, Codigo_metodo, Especie, Individuos) %>%
+      dplyr:: filter(Especie != "Z sin registro") %>%
+      dplyr::filter(Metodo != "INC") %>%
+      dplyr::select(-Metodo) %>%
+      dplyr::group_by(Codigo_metodo, Especie) %>%
+      dplyr::summarise(Individuos = sum(Individuos, na.rm = TRUE), .groups = "drop") %>%
       tidyr::pivot_wider(
         id_cols = Codigo_metodo,
         names_from = Especie,
@@ -88,7 +88,7 @@ calc.abun <- function(PC_lista) {
 
     # 2. Crear la Matriz de Conteos sin la columna ID
     matriz_conteo <- diversidad_data %>%
-      tidyverse::select(-Codigo_metodo)
+      dplyr::select(-Codigo_metodo)
 
     # 3. Cálculo de los índices
     Shannon <- vegan::diversity(matriz_conteo, index = "shannon")
