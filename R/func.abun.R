@@ -1,7 +1,7 @@
 #' @author Biol. Michell Ivann Romero Pacheco
 #' @title Cálcular abundancias, actividades estratos y diversidad
 #' @description
-#' Aplica calculos de abundancia relativa de cada especie, actividades, diversidad y estratos
+#' Aplica calculos de abundancia relativa de cada especie, actividades, diversidad y estratos.
 #' @param PC_lista lista con dataframes de distintos proyectos de una hoja (ej: PCTS_PEEM_OAX).
 #' @return Archivos xlsx con los reusltados por proyecto
 #' @export
@@ -11,15 +11,21 @@
 #' @importFrom vegan diversity specnumber
 #' @importFrom openxlsx write.xlsx
 #' @importFrom magrittr %>%
+#' @importFrom duckplyr as_duckplyr_df
 calc.abun <- function(PC_lista) {
 
   # Función interna aplicada a cada dataframe (proyecto) dentro de la lista
   lapply(PC_lista, function(df) {
+  #----------------------------------------------------------------
+    # Convertir a duckplyr para optimización y velocidad
+    df_db <- df %>% duckplyr::as_duckplyr_df()
+  #----------------------------------------------------------------
+    
 
     # ------------------------------------------------------------------
     # 1. Datos de abundancia por especie y cálculo del IAR
     # ------------------------------------------------------------------
-    abun <- df %>%
+    abun <- df_db %>%
       dplyr:: select(Especie, Individuos) %>%
       dplyr:: filter(Especie != "Z sin registro") %>%
       dplyr:: group_by(Especie) %>%
@@ -32,7 +38,7 @@ calc.abun <- function(PC_lista) {
     # ------------------------------------------------------------------
     # 2. Datos de abundancia por actividad (Cortejo, Forrajeo, Percha, Vocalización, Vuelo)
     # ------------------------------------------------------------------
-    actividad <- df %>%
+    actividad <- df_db %>%
       dplyr::select(Especie, Cortejo, Forrajeo, Percha, Vocalizacion, Vuelo) %>%
       dplyr:: filter(Especie != "Z sin registro") %>%
       tidyr::pivot_longer(
@@ -51,7 +57,7 @@ calc.abun <- function(PC_lista) {
     # ------------------------------------------------------------------
     # 3. Datos de abundancia por estratos
     # ------------------------------------------------------------------
-    estratos <- df %>%
+    estratos <- df_db %>%
       dplyr::select(Especie, Arboreo, Arbustivo, Herbaceo, Suelo, Agua, Estructura, Aereo) %>%
       dplyr:: filter(Especie != "Z sin registro") %>%
       tidyr::pivot_longer(
@@ -69,7 +75,7 @@ calc.abun <- function(PC_lista) {
     # ------------------------------------------------------------------
     # 4. Cálculo de índices de diversidad
     # ------------------------------------------------------------------
-    diversidad_data <- df %>%
+    diversidad_data <- df_db %>%
       dplyr::select(Metodo, Codigo_metodo, Especie, Individuos) %>%
       dplyr:: filter(Especie != "Z sin registro") %>%
       dplyr::filter(Metodo != "INC") %>%

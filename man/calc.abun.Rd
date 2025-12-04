@@ -13,7 +13,7 @@ calc.abun(PC_lista)
 Archivos xlsx con los reusltados por proyecto
 }
 \description{
-Aplica calculos de abundancia relativa de cada especie, actividades, diversidad y estratos
+Aplica calculos de abundancia relativa de cada especie, actividades, diversidad y estratos.
 }
 \author{
 Biol. Michell Ivann Romero Pacheco
