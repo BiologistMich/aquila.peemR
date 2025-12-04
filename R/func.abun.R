@@ -1,9 +1,9 @@
-#' @author Biol. Michell Ivann Romero Pacheco
+#' @author Biol. Michell Romero - Coordinador del área de Monitoreo de aves TCT 🦉
 #' @title Cálcular abundancias, actividades estratos y diversidad
 #' @description
 #' Aplica calculos de abundancia relativa de cada especie, actividades, diversidad y estratos.
 #' @param PC_lista lista con dataframes de distintos proyectos de una hoja (ej: PCTS_PEEM_OAX).
-#' @return Archivos xlsx con los reusltados por proyecto
+#' @return Archivos xlsx con los resultados por proyecto
 #' @export
 #' @importFrom dplyr filter select group_by summarise mutate arrange n_distinct
 #' @importFrom janitor adorn_totals

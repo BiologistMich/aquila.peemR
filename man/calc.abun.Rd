@@ -10,11 +10,11 @@ calc.abun(PC_lista)
 \item{PC_lista}{lista con dataframes de distintos proyectos de una hoja (ej: PCTS_PEEM_OAX).}
 }
 \value{
-Archivos xlsx con los reusltados por proyecto
+Archivos xlsx con los resultados por proyecto
 }
 \description{
 Aplica calculos de abundancia relativa de cada especie, actividades, diversidad y estratos.
 }
 \author{
-Biol. Michell Ivann Romero Pacheco
+Biol. Michell Romero - Coordinador del área de Monitoreo de aves TCT 🦉
 }
