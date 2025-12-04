@@ -15,8 +15,14 @@ calc.cv <- function(CV_lista) {
   lapply(CV_lista, function(df) {
 
   #----------------------------------------------------------------
-  # Convertir a duckplyr para optimización y velocidad
-    df_db <- df %>% duckplyr::as_duckplyr_df()
+   # Convertir a duckplyr para optimización y velocidad
+    # 1. VERIFICAR si ya es un duck frame. Si lo es, usarlo directamente.
+    if (inherits(df, "duckplyr_df")) { #función de R verifica si un objeto (df) pertenece a una clase específica
+        df_db <- df
+    } else {
+        # 2. Si es un dataframe normal (la mayoría de las veces), convertirlo.
+        df_db <- df %>% duckplyr::as_duckplyr_df()
+    }
   #----------------------------------------------------------------
     
     riesgo_CV <- df_db |> 
